@@ -16,14 +16,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup Java 11"
+        uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
+      - name: "Setup Flutter 3.7.3"
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.7.3'
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build appbundle
+      - name: "Inject Upload JKS"
+        env:
+          KEY_JKS: ${{ secrets.UPLOAD_KEY_JKS }}
+        run: echo $KEY_JKS > android/app/upload.jks
+      - name: "Retrieve dependencies"
+        run: flutter pub get
+      - name: Test
+        env:
+          KEY_PASSWORD: ${{ secrets.UPLOAD_ALIAS_PASSWORD }}
+          ALIAS_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+        run: flutter test
+      - name: "Build app bundle"
+        env:
+          KEY_PASSWORD: ${{ secrets.UPLOAD_ALIAS_PASSWORD }}
+          ALIAS_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+        run: flutter build appbundle
+      - name: "Upload artifacts"
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
