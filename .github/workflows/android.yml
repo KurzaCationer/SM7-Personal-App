@@ -3,18 +3,16 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Flutter
+name: "Publish Android"
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  release:
+    types: [published]
 
 jobs:
-  build-android:
+  deploy:
+    if: github.repository == 'kurzacationer/sm7-personal-app'
     runs-on: ubuntu-latest
-
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -27,24 +25,29 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.7.3'
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
       - name: "Inject Upload JKS"
         env:
           KEY_JKS: ${{ secrets.UPLOAD_KEY_JKS }}
         run: echo $KEY_JKS | base64 -d > android/app/upload.jks
-      - name: "Retrieve dependencies"
-        run: flutter pub get
-      - name: Test
-        env:
-          KEY_PASSWORD: ${{ secrets.UPLOAD_ALIAS_PASSWORD }}
-          ALIAS_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
-        run: flutter test
       - name: "Build app bundle"
         env:
           KEY_PASSWORD: ${{ secrets.UPLOAD_ALIAS_PASSWORD }}
           ALIAS_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
-        run: flutter build appbundle
-      - name: "Upload artifacts"
-        uses: actions/upload-artifact@v1
+        run: flutter build appbundle --build-name=${{ github.event.release.tag_name }} --build-number=${{ github.run_number }}
+      - name: "Upload Android Release to Play Store"
+        uses: r0adkll/upload-google-play@v1
         with:
-          name: release-appbundle
-          path: build/app/outputs/bundle/release/app-release.aab
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: nl.kurza.test_project
+          inAppUpdatePriority: 2
+          status: draft
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: internal
+
+
