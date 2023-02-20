@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
-                <data android:host="test_project.kurza.nl"/>
+                <data android:host="test-project.kurza.nl"/>
             </intent-filter>
 
 <!--            <meta-data android:name="deeplink_app" android:value="true" />-->
