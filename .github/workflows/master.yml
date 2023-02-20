@@ -30,7 +30,7 @@ jobs:
       - name: "Inject Upload JKS"
         env:
           KEY_JKS: ${{ secrets.UPLOAD_KEY_JKS }}
-        run: echo $KEY_JKS > android/app/upload.jks
+        run: echo $KEY_JKS | base64 -d > android/app/upload.jks
       - name: "Retrieve dependencies"
         run: flutter pub get
       - name: Test
