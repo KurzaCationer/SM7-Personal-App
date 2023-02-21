@@ -38,6 +38,14 @@
                 <data android:host="test-project.kurza.nl"/>
             </intent-filter>
 
+            <meta-data android:name="deeplink_auth" android:value="true" />
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="nl.kurza.test_project.auth"/>
+            </intent-filter>
+
 <!--            <meta-data android:name="deeplink_app" android:value="true" />-->
 <!--            <intent-filter android:autoVerify="true">-->
 <!--                <action android:name="android.intent.action.VIEW" />-->

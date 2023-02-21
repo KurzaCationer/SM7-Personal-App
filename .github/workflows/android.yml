@@ -7,7 +7,7 @@ name: "Publish Android"
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   deploy:
@@ -35,6 +35,10 @@ jobs:
         env:
           KEY_JKS: ${{ secrets.UPLOAD_KEY_JKS }}
         run: echo $KEY_JKS | base64 -d > android/app/upload.jks
+      - name: "Retrieve dependencies"
+        run: flutter pub get
+      - name: "Run build_runner"
+        run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: "Build app bundle"
         env:
           KEY_PASSWORD: ${{ secrets.UPLOAD_ALIAS_PASSWORD }}
