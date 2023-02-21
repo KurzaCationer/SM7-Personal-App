@@ -21,7 +21,6 @@ bool busy = false;
 class MyApp extends HookWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     var authInformation = useState(AuthInformation());

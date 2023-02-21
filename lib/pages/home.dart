@@ -14,15 +14,8 @@ class HomePage extends HookWidget {
       title: "Home Page",
       child: Column(
         children: [
-          TextButton(
-              onPressed: () => {auth.login()},
-              child: const Text("Login")),
-          TextButton(
-              onPressed: () => {auth.logout()},
-              child: const Text("Logout")),
-          TextButton(
-              onPressed: () => {auth.refresh()},
-              child: const Text("Refresh")),
+          TextButton(onPressed: () => {auth.logout()}, child: const Text("Logout")),
+          TextButton(onPressed: () => {auth.refresh()}, child: const Text("Refresh")),
           Text("Access Token: ${auth.authInformation.accessToken}")
         ],
       ),
