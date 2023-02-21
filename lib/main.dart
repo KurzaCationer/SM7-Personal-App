@@ -8,7 +8,7 @@ import 'auth/auth.dart';
 import 'pages/home.dart';
 
 Future<void> main() async {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final fireLoginEvent = Event();
@@ -16,11 +16,11 @@ final fireLogoutEvent = Event();
 final fireRefreshEvent = Event();
 
 bool initialized = false;
+bool busy = false;
 
 class MyApp extends HookWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
-  var busy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class MyApp extends HookWidget {
 
     return AuthWrapper(
         authInformation: authInformation.value,
-        child: MaterialApp(
+        child: const MaterialApp(
           home: HomePage(),
         ));
   }
